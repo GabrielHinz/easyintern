@@ -33,18 +33,19 @@ class CollegeClass(models.Model):
         verbose_name="Departamento",
         help_text="Departamento ao qual a turma pertence.",
     )
-    students = models.ManyToManyField(
-        UserCustom,
-        related_name="classes",
-        limit_choices_to={"is_student": True},
-        verbose_name="Alunos",
-    )
     teachers = models.ManyToManyField(
         UserCustom,
         related_name="teaching_classes",
         limit_choices_to={"is_teacher": True},
         verbose_name="Professores",
         help_text="Professores responsáveis pela turma.",
+    )
+    students = models.ManyToManyField(
+        UserCustom,
+        related_name="classes",
+        limit_choices_to={"is_student": True},
+        verbose_name="Alunos",
+        help_text="Alunos matriculados na turma.",
     )
     start_date = models.DateField(
         verbose_name="Data de Início", help_text="Data de início do ano letivo."
