@@ -29,6 +29,8 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+APP_NAME = "EasyIntern"
+APP_VERSION = "0.1"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -39,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "users",
     "college",
+    "panel",
 ]
 
 MIDDLEWARE = [
@@ -64,6 +67,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "panel.context_processors.app_info",
             ],
         },
     },

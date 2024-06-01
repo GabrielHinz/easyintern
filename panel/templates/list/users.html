@@ -1,0 +1,51 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row w-100">
+                    <div class="col-6">
+                        <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
+                        <p> {{ pagedescription }}<p>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <button href="#" class="btn btn-primary float-end">Adicionar Novo</button>
+                    </div>
+
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>
+                                RA
+                            </th>
+                            <th>Nome Completo</th>
+                            <th>Email</th>
+                            <th>Tipo</th>
+                            <th data-sortable="false"  style="width: 250px">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.ra }}</td>
+                                <td>{{ user.first_name }} {{ user.last_name }}</td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.get_type }}</td>
+                                <td syle="">
+                                    <a href="" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="" class="btn btn-danger btn-sm">Excluir</a>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        </div>
+    </div>
+    </section>
+{% endblock %}
