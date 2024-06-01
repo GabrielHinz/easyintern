@@ -1,6 +1,6 @@
 from django.db import models
 
-from users.models import CustomUser
+from users.models import UserCustom
 
 
 class Department(models.Model):
@@ -14,7 +14,7 @@ class Department(models.Model):
         help_text="Código único do departamento.",
     )
     responsible = models.ForeignKey(
-        CustomUser,
+        UserCustom,
         on_delete=models.CASCADE,
         limit_choices_to={"is_teacher": True},
         verbose_name="Responsável",
@@ -34,13 +34,13 @@ class CollegeClass(models.Model):
         help_text="Departamento ao qual a turma pertence.",
     )
     students = models.ManyToManyField(
-        CustomUser,
+        UserCustom,
         related_name="classes",
         limit_choices_to={"is_student": True},
         verbose_name="Alunos",
     )
     teachers = models.ManyToManyField(
-        CustomUser,
+        UserCustom,
         related_name="teaching_classes",
         limit_choices_to={"is_teacher": True},
         verbose_name="Professores",
