@@ -7,6 +7,8 @@ class UserCustom(AbstractUser):
     ra = models.CharField(
         max_length=10,
         unique=True,
+        blank=True,
+        null=True,
         verbose_name="RA",
         help_text="RA único de cada aluno",
     )
@@ -40,6 +42,16 @@ class UserCustom(AbstractUser):
     )
     is_student = models.BooleanField(default=False, verbose_name="Aluno")
     is_teacher = models.BooleanField(default=False, verbose_name="Professor")
+    is_company = models.BooleanField(default=False, verbose_name="Empresa")
+
+    @property
+    def get_type(self):
+        if self.is_student:
+            return "Aluno"
+        elif self.is_teacher:
+            return "Professor"
+        else:
+            return "Usuário"
 
     def __str__(self):
         return self.first_name + " " + self.last_name + " - (" + self.ra + ")"
