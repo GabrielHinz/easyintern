@@ -9,8 +9,8 @@ class UserCustom(AbstractUser):
         unique=True,
         blank=True,
         null=True,
-        verbose_name="RA",
-        help_text="RA único de cada aluno",
+        verbose_name="R.A",
+        help_text="R.A único em caso de aluno",
     )
     image = StdImageField(
         blank=True,
@@ -40,9 +40,18 @@ class UserCustom(AbstractUser):
         verbose_name="Contato de Emergência",
         help_text="Número de telefone de emergência.",
     )
-    is_student = models.BooleanField(default=False, verbose_name="Aluno")
-    is_teacher = models.BooleanField(default=False, verbose_name="Professor")
-    is_company = models.BooleanField(default=False, verbose_name="Empresa")
+    type = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        verbose_name="Tipo",
+        help_text="Tipo de usuário do sistema",
+        choices=[
+            ("student", "Aluno"),
+            ("teacher", "Professor"),
+            ("company", "Empresa"),
+        ],
+    )
 
     @property
     def get_type(self):

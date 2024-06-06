@@ -16,7 +16,7 @@ class Department(models.Model):
     responsible = models.ForeignKey(
         UserCustom,
         on_delete=models.CASCADE,
-        limit_choices_to={"is_teacher": True},
+        limit_choices_to={"type": "teacher"},
         verbose_name="Responsável",
         help_text="Professor responsável pelo departamento.",
     )
@@ -36,14 +36,14 @@ class CollegeClass(models.Model):
     teachers = models.ManyToManyField(
         UserCustom,
         related_name="teaching_classes",
-        limit_choices_to={"is_teacher": True},
+        limit_choices_to={"type": "teacher"},
         verbose_name="Professores",
         help_text="Professores responsáveis pela turma.",
     )
     students = models.ManyToManyField(
         UserCustom,
         related_name="classes",
-        limit_choices_to={"is_student": True},
+        limit_choices_to={"type": "student"},
         verbose_name="Alunos",
         help_text="Alunos matriculados na turma.",
     )
