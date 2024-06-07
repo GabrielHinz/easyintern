@@ -57,7 +57,7 @@ class CollegeClassListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["pagetitle"] = "Classes"
+        context["pagetitle"] = "Turmas"
         return context
 
 
@@ -69,8 +69,8 @@ class CollegeClassCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["segment"] = "Classes"
-        context["segment_link"] = "/classes/list/"
+        context["segment"] = "Turmas"
+        context["segment_link"] = "/class/list/"
         context["pagetitle"] = "Nova Classe"
         return context
 
@@ -83,8 +83,8 @@ class CollegeClassUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["segment"] = "Classes"
-        context["segment_link"] = "/classes/list/"
+        context["segment"] = "Turmas"
+        context["segment_link"] = "/class/list/"
         context["pagetitle"] = self.object.name
         return context
 

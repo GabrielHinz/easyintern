@@ -31,22 +31,22 @@ urlpatterns = [
         name="panel_department_delete",
     ),
     path(
-        "classes/list/",
+        "class/list/",
         CollegeClassListView.as_view(),
         name="panel_collegeclass_list",
     ),
     path(
-        "classes/create/",
+        "class/create/",
         CollegeClassCreateView.as_view(),
         name="panel_collegeclass_create",
     ),
     path(
-        "classes/update/<int:pk>/",
+        "class/update/<int:pk>/",
         CollegeClassUpdateView.as_view(),
         name="panel_collegeclass_update",
     ),
     path(
-        "classes/delete/<int:pk>/",
+        "class/delete/<int:pk>/",
         CollegeClassDeleteView.as_view(),
         name="panel_collegeclass_delete",
     ),
