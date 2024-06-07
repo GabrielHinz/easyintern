@@ -1240,3 +1240,9 @@ span.help-block {
   font-size: 13px;
   color: #757373;
 }
+
+.datatable-input,
+.datatable-selector {
+  border: 1px solid #d7d7d7;
+  border-radius: 10px;
+}

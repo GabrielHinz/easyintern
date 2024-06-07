@@ -14,9 +14,6 @@ class UserListView(ListView):
         context["pagetitle"] = "Usuários"
         return context
 
-    def get_queryset(self):
-        return UserCustom.objects.all().order_by("first_name")
-
 
 class UserCreateView(CreateView):
     model = UserCustom

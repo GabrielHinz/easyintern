@@ -62,4 +62,9 @@ class UserCustom(AbstractUser):
             return "Usuário"
 
     def __str__(self):
-        return self.first_name + " " + self.last_name + " - (" + self.ra + ")"
+        if self.type == "student":
+            return self.first_name + " " + self.last_name + " - (" + self.ra + ")"
+        if self.type == "teacher":
+            return self.first_name + " " + self.last_name + " - (Professor)"
+        if self.type == "company":
+            return self.first_name + " " + self.last_name + " - (Empresa)"

@@ -1,0 +1,65 @@
+{% extends 'main/base.html' %}
+{% load bootstrap %}
+{% block content %}
+<form method="POST">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12 col-lg-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pagetitle }}</h5>
+                    <div class="form-group">
+                        {{form.name|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.department|bootstrap}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-9">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Detalhes</h5>
+                    <div class="form-group">
+                        {{form.start_date|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.end_date|bootstrap}}
+                    </div>
+                    <div class="form-group mb-3 mt-3">
+                        {{form.teachers|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.students|bootstrap}}
+                    </div>
+                    <div class="form-group mb-3 mt-3">
+                        
+                        <div class="row">
+                            <div class="col">
+                                <a href="{{segment_link}}" class="btn btn-secondary w-100">Cancelar</a>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary w-100">Submit</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+</form>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        flatpickr('.this-datepicker', {
+            enableTime: true,
+            dateFormat: 'd/m/Y'
+        });
+    });
+</script>
+{% endblock %}

@@ -46,6 +46,7 @@ class CollegeClass(models.Model):
         limit_choices_to={"type": "student"},
         verbose_name="Alunos",
         help_text="Alunos matriculados na turma.",
+        blank=True,
     )
     start_date = models.DateField(
         verbose_name="Data de Início", help_text="Data de início do ano letivo."
