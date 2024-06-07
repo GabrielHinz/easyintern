@@ -13,12 +13,13 @@
                         <p> {{ pagedescription }}<p>
                     </div>
                     <div class="col-6 mt-3">
-                        <button href="#" class="btn btn-primary float-end">Adicionar Novo</button>
+                        <a href="{% url 'panel_user_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
                     </div>
 
                 <table class="table datatable">
                     <thead>
                         <tr>
+                            <th>Código</th>
                             <th>
                                 RA
                             </th>
@@ -30,14 +31,15 @@
                     </thead>
                     <tbody>
                         {% for user in users %}
-                            <tr>
+                            <tr data-pk="{{user.pk}}">
+                                <td class="text-center"><a href="{% url 'panel_user_update' pk=user.pk %}">{{ user.pk }}</a></td>
                                 <td>{{ user.ra }}</td>
                                 <td>{{ user.first_name }} {{ user.last_name }}</td>
                                 <td>{{ user.email }}</td>
-                                <td>{{ user.get_type }}</td>
+                                <td>{{ user.get_type_display }}</td>
                                 <td syle="">
-                                    <a href="" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="" class="btn btn-danger btn-sm">Excluir</a>
+                                    <a href="{% url 'panel_user_update' pk=user.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="#" onclick="confirmDelete({{user.pk}})" class="btn btn-danger btn-sm">Excluir</a>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -48,4 +50,30 @@
         </div>
     </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function confirmDelete(pk) {
+            if (confirm("Deseja realmente remover este usuário?")) {
+                fetch("/user/delete/" + pk + "/", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    const row = document.querySelector(`tr[data-pk="${pk}"]`);
+                    if (row) {
+                        row.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
 {% endblock %}

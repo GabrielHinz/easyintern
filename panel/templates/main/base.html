@@ -53,7 +53,7 @@
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{% url 'panel' %}">Home</a></li>
                     {% if segment %}
-                        <li class="breadcrumb-item"><a>{{segment.title}}</a></li>
+                        <li class="breadcrumb-item"><a {% if segment_link %}href="{{segment_link}}"{% endif %}>{{segment}}</a></li>
                     {% endif %}
                     <li class="breadcrumb-item active">{{pagetitle}}</li>
                 </ol>

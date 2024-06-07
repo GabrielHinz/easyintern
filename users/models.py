@@ -42,8 +42,6 @@ class UserCustom(AbstractUser):
     )
     type = models.CharField(
         max_length=10,
-        blank=True,
-        null=True,
         verbose_name="Tipo",
         help_text="Tipo de usuário do sistema",
         choices=[
@@ -51,6 +49,7 @@ class UserCustom(AbstractUser):
             ("teacher", "Professor"),
             ("company", "Empresa"),
         ],
+        default="student",
     )
 
     @property

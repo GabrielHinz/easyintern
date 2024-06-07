@@ -1,3 +1,74 @@
-from django.shortcuts import render
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
-# Create your views here.
+from users.forms import UserCustomForm
+from users.models import UserCustom
+
+
+class UserListView(ListView):
+    model = UserCustom
+    template_name = "list/users.html"
+    context_object_name = "users"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["pagetitle"] = "Usuários"
+        return context
+
+    def get_queryset(self):
+        return UserCustom.objects.all().order_by("first_name")
+
+
+class UserCreateView(CreateView):
+    model = UserCustom
+    template_name = "forms/users.html"
+    form_class = UserCustomForm
+    success_url = "/user/list/"
+
+    def form_valid(self, form):
+        if "password" in form.cleaned_data:
+            form.instance.set_password(form.cleaned_data["password"])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Usuários"
+        context["segment_link"] = "/user/list/"
+        context["pagetitle"] = "Criação de Usuário"
+        return context
+
+
+class UserUpdateView(UpdateView):
+    model = UserCustom
+    template_name = "forms/users.html"
+    form_class = UserCustomForm
+    success_url = "/user/list/"
+
+    def form_valid(self, form):
+        if "password" in form.cleaned_data:
+            form.instance.set_password(form.cleaned_data["password"])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Usuários"
+        context["segment_link"] = "/user/list/"
+        context["pagetitle"] = "Atualização de Usuário"
+        return context
+
+
+class UserDeleteView(DeleteView):
+    model = UserCustom
+    template_name = "delete/user.html"
+    success_url = "/user/list/"
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.delete()
+        return super().delete(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Usuários"
+        context["segment_link"] = "/user/list/"
+        context["pagetitle"] = "Exclusão de Usuário"
+        return context
