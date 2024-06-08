@@ -71,7 +71,7 @@ class CollegeClassCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context["segment"] = "Turmas"
         context["segment_link"] = "/class/list/"
-        context["pagetitle"] = "Nova Classe"
+        context["pagetitle"] = "Nova Turma"
         return context
 
 
