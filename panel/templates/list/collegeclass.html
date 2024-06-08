@@ -56,7 +56,7 @@
 <script>
     function confirmDelete(pk) {
         if (confirm("Deseja realmente remover este departamento?")) {
-            fetch("/department/delete/" + pk + "/", {
+            fetch("/class/delete/" + pk + "/", {
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': '{{ csrf_token }}',
