@@ -19,6 +19,8 @@ class Department(models.Model):
         limit_choices_to={"type": "teacher"},
         verbose_name="Responsável",
         help_text="Professor responsável pelo departamento.",
+        null=True,
+        blank=True,
     )
 
     def __str__(self):
@@ -39,13 +41,6 @@ class CollegeClass(models.Model):
         limit_choices_to={"type": "teacher"},
         verbose_name="Professores",
         help_text="Professores responsáveis pela turma.",
-    )
-    students = models.ManyToManyField(
-        UserCustom,
-        related_name="classes",
-        limit_choices_to={"type": "student"},
-        verbose_name="Alunos",
-        help_text="Alunos matriculados na turma.",
         blank=True,
     )
     start_date = models.DateField(

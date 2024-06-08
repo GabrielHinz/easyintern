@@ -49,7 +49,7 @@ class UserUpdateView(UpdateView):
         context = super().get_context_data(**kwargs)
         context["segment"] = "Usuários"
         context["segment_link"] = "/user/list/"
-        context["pagetitle"] = "Atualização de Usuário"
+        context["pagetitle"] = self.object.get_full_name()
         return context
 
 

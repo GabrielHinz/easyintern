@@ -4,10 +4,10 @@
 <form method="POST">
     {% csrf_token %}
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-12 col-lg-3">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">{{ pagetitle }}</h5>
+                    <h5 class="card-title">Usuário</h5>
                     <div class="form-group">
                         {{form.image|bootstrap}}
                     </div>
@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-9">
+        <div class="col-12 col-lg-9">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Detalhes</h5>
@@ -39,7 +39,16 @@
                     <div class="form-group mt-3">
                         {{form.last_name|bootstrap}}
                     </div>
-                    <div class="form-group mt-3">
+                    <div data-type="company" class="form-group mt-3">
+                        {{form.company_sector|bootstrap}}
+                    </div>
+                    <div data-type="company" class="form-group mt-3">
+                        {{form.company_cnpj|bootstrap}}
+                    </div>
+                    <div data-type="student" class="form-group mt-3">
+                        {{form.student_class|bootstrap}}
+                    </div>
+                    <div data-type="student" class="form-group mt-3">
                         {{form.ra|bootstrap}}
                     </div>
                     <hr>
@@ -52,10 +61,10 @@
                     <div class="form-group mt-3">
                         {{form.contact|bootstrap}}
                     </div>
-                    <div class="form-group mt-3">
+                    <div data-type="student" class="form-group mt-3">
                         {{form.extra_contact|bootstrap}}
                     </div>
-                    <div class="row">
+                    <div class="row mt-3 ">
                         <div class="col-6">
                             <a href="{{segment_link}}" class="btn btn-secondary w-100">Cancelar</a>
                         </div>
@@ -77,4 +86,31 @@
     {% endif %}
 {% endfor %}
 
+{% endblock %}
+
+{% block javascripts %}
+<script>
+$(document).ready(function() {
+    function showHideFields() {
+        var selectedType = $('#id_type').val();
+        $('[data-type]').each(function() {
+            if ($(this).data('type') !== selectedType) {
+                $(this).hide();
+                $(this).find('input').removeAttr('required');
+                $(this).find('select').removeAttr('required');
+            } else {
+                $(this).show();
+                $(this).find('select').attr('required', 'required');
+                $(this).find('input').attr('required', 'required');
+            }
+        });
+    }
+
+    showHideFields();
+
+    $('#id_type').change(function() {
+        showHideFields();
+    });
+});
+</script>
 {% endblock %}

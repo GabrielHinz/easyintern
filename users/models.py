@@ -21,6 +21,14 @@ class UserCustom(AbstractUser):
         },
         verbose_name="Imagem do Perfil",
     )
+    student_class = models.ForeignKey(
+        "college.CollegeClass",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Turma",
+        help_text="Turma do aluno.",
+    )
     address = models.CharField(
         max_length=64,
         blank=True,
@@ -50,6 +58,20 @@ class UserCustom(AbstractUser):
             ("company", "Empresa"),
         ],
         default="student",
+    )
+    company_sector = models.CharField(
+        max_length=64,
+        blank=True,
+        null=True,
+        verbose_name="Setor",
+        help_text="Setor da empresa.",
+    )
+    company_cnpj = models.CharField(
+        max_length=14,
+        blank=True,
+        null=True,
+        verbose_name="CNPJ",
+        help_text="CNPJ da empresa.",
     )
 
     @property
