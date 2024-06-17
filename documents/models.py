@@ -23,6 +23,36 @@ class Contract(models.Model):
         help_text="Contrato do estágio em (apenas PDF).",
     )
 
+    @property
+    def is_approved(self):
+        teacher_signature = ContractSignature.objects.filter(
+            user__type="teacher",
+            contract=self,
+        ).exists()
+        company_signature = ContractSignature.objects.filter(
+            user=self.internship.company,
+            contract=self,
+        ).exists()
+        return teacher_signature and company_signature
+
+    @property
+    def get_signatures(self):
+        callback = "<ul>"
+        if ContractSignature.objects.filter(
+            contract=self, user__type="teacher"
+        ).exists():
+            callback += "<li>✔️ Professor(a)</li>"
+        else:
+            callback += "<li>❌ Professor(a)</li>"
+        if ContractSignature.objects.filter(
+            contract=self, user__type="company"
+        ).exists():
+            callback += "<li>✔️ Empresa</li>"
+        else:
+            callback += "<li>❌ Empresa</li>"
+        callback += "</ul>"
+        return callback
+
     def __str__(self):
         return self.internship.name
 

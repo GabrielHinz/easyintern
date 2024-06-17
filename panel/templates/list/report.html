@@ -25,8 +25,9 @@
                             </th>
                             <th>Estágio</th>
                             <th>Dia</th>
-                            <th>Horas Registradas</th>
+                            <th>Horas</th>
                             <th>Assinaturas</th>
+                            <th>Situação</th>
                             <th data-sortable="false"  style="width: 250px">Ações</th>
                         </tr>
                     </thead>
@@ -39,11 +40,10 @@
                                 <td>{{ obj.date_report }}</td>
                                 <td>{{ obj.total_hours }}</td>
                                 <td>{{ obj.get_signatures|safe }}</td>
+                                <td>{% if obj.is_approved %}Aprovado{% else %}Pendente{% endif %}</td>
                                 <td syle="">
                                     {% if request.user.type == "teacher" or request.user.type == "company" %}
-                                        {% if obj in signed_reports %}
-                                            <a href="#" class="btn btn-primary btn-sm disabled">Assinado</a>
-                                        {% else %}
+                                        {% if obj not in signed_reports %}
                                             <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureReport({{obj.pk}})" class="btn btn-primary btn-sm">Assinar</a>
                                         {% endif %}
                                     {% endif %}

@@ -1,7 +1,7 @@
 from django.db import models
 
 from college.models import Department
-from documents.models import ContractSignature
+from documents.models import Contract
 from users.models import UserCustom
 
 
@@ -42,11 +42,10 @@ class Internship(models.Model):
     @property
     def can_apply(self):
         if self.have_contract:
-            teacher_contract = ContractSignature.objects.filter(
-                contract__internship_id=self.id,
-                user__type="teacher",
-            ).exists()
-            return teacher_contract
+            contract = Contract.objects.filter(internship=self).last()
+            if contract:
+                return contract.is_approved
+            return False
         return True
 
     def __str__(self):

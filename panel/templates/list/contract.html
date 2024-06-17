@@ -19,23 +19,30 @@
                 <table class="table datatable">
                     <thead>
                         <tr>
-                            <th style="width: 250px">Código</th>
+                            <th>Código</th>
                             <th>
                                 Estágio
                             </th>
-                            <th data-sortable="false"  style="width: 250px">Ações</th>
+                            <th>Empresa</th>
+                            <th>Contrato</th>
+                            <th>Assinaturas</th>
+                            <th>Situação</th>
+                            <th data-sortable="false">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for obj in contracts %}
-                            <tr data-pk="{{obj.pk}}" class={% if obj in signed_contracts %}"tr-green"{% else %}"tr-yellow"{% endif %}>
+                            <tr data-pk="{{obj.pk}}">
                                 <td class="text-center"><a href="{% url 'panel_contract_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
                                 <td>{{ obj.internship }}</td>
+                                <td>{{ obj.internship.company }}</td>
+                                <td><a href="{{obj.contract_pdf.url}}" class="btn btn-primary" target="_blank" rel="noopener noreferrer">Visualizar</a>
+                                </td> 
+                                <td>{{ obj.get_signatures|safe }}</td>
+                                <td>{% if obj.is_approved %}Ativo{% else %}Pendente{% endif %}</td>
                                 <td >
-                                    {% if obj in signed_contracts %}
-                                        <a href="#" class="btn btn-primary btn-sm disabled">Assinado</a>
-                                    {% else %}
-                                        <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureContract({{obj.pk}})" class="btn btn-primary btn-sm">Assinar</a>
+                                    {% if obj not in signed_contracts %}
+                                        <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureContract({{obj.pk}})" class="btn btn-success btn-sm">Assinar</a>
                                     {% endif %}
                                     {% if request.user.is_superuser or request.user.is_staff %}
                                         <a href="{% url 'panel_contract_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
