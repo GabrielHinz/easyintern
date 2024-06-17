@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "users",
     "college",
     "panel",
+    "internship",
+    "documents",
 ]
 
 MIDDLEWARE = [

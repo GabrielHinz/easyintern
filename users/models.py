@@ -29,6 +29,13 @@ class UserCustom(AbstractUser):
         verbose_name="Turma",
         help_text="Turma do aluno.",
     )
+    student_internship = models.ManyToManyField(
+        "internship.Internship",
+        blank=True,
+        verbose_name="Estágios",
+        related_name="students",
+        help_text="Estágios em que o aluno está participando. Selecione todos os aplicáveis.",
+    )
     address = models.CharField(
         max_length=64,
         blank=True,

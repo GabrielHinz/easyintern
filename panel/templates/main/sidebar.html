@@ -32,7 +32,7 @@
             </a>
         </li>
 
-        <li class="nav-heading">Estágios</li>
+        <li class="nav-heading">Estágio</li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_internship_list' %}">
@@ -42,15 +42,20 @@
         </li>
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="{% url 'panel_contract_list' %}">
+                <i class="bi bi-briefcase"></i>
+                <span>Contratos</span>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link collapsed" href="{% url 'panel_report_list' %}">
                 <i class="bi bi-journal-text"></i>
-                <span>Documentos</span>
+                <span>Relatórios</span>
             </a>
         </li>
 
         <li class="nav-heading">Administração</li>
-
-
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">

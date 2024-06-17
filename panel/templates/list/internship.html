@@ -13,31 +13,35 @@
                         <p> {{ pagedescription }}<p>
                     </div>
                     <div class="col-6 mt-3">
-                        <a href="{% url 'panel_user_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+                        <a href="{% url 'panel_internship_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
                     </div>
 
                 <table class="table datatable">
                     <thead>
                         <tr>
                             <th>Código</th>
-                            <th>Nome Completo</th>
-                            <th>Tipo</th>
-                            <th>Email</th>
-                            <th>Contato</th>
+                            <th>
+                                Nome do Estágio
+                            </th>
+                            <th>Empresa</th>
+                            <th>Início</th>
+                            <th>Término</th>
+                            <th>Liberado</th>
                             <th data-sortable="false"  style="width: 250px">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for user in users %}
-                            <tr data-pk="{{user.pk}}">
-                                <td class="text-center"><a href="{% url 'panel_user_update' pk=user.pk %}">{{ user.pk }}</a></td>
-                                <td>{{ user.first_name }} {{ user.last_name }} {% if user.type == "student" %} {{ user.ra }} {% endif %}</td>
-                                <td>{{ user.get_type_display }}</td>
-                                <td>{{ user.email }}</td>
-                                <td>{{ user.contact }}</td>
+                        {% for obj in internships %}
+                            <tr data-pk="{{obj.pk}}">
+                                <td class="text-center"><a href="{% url 'panel_internship_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
+                                <td>{{ obj.name }}</td>
+                                <td>{{ obj.company.first_name }}</td>
+                                <td>{{ obj.date_start }}</td>
+                                <td>{{ obj.date_end }}</td>
+                                <td>{{ obj.can_apply }}</td>
                                 <td syle="">
-                                    <a href="{% url 'panel_user_update' pk=user.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" onclick="confirmDelete({{user.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    <a href="{% url 'panel_internship_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -53,8 +57,8 @@
 {% block javascripts %}
     <script>
         function confirmDelete(pk) {
-            if (confirm("Deseja realmente remover este usuário?")) {
-                fetch("/user/delete/" + pk + "/", {
+            if (confirm("Deseja realmente remover este estágio?")) {
+                fetch("/internship/delete/" + pk + "/", {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': '{{ csrf_token }}',

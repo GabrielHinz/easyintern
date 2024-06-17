@@ -10,6 +10,8 @@ class UserCustomForm(forms.ModelForm):
         required=False,
         help_text="Deixe em branco para não alterar.",
     )
+    first_name = forms.CharField(label="Primeiro Nome", required=True)
+    last_name = forms.CharField(label="Sobrenome", required=True)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -36,4 +38,5 @@ class UserCustomForm(forms.ModelForm):
             "is_staff",
             "groups",
             "user_permissions",
+            "password",
         ]

@@ -1246,3 +1246,11 @@ span.help-block {
   border: 1px solid #d7d7d7;
   border-radius: 10px;
 }
+
+.tr-green td {
+  background-color: #e7ffeb !important;
+}
+
+.tr-yellow td {
+  background-color: #ffd1000f !important;
+}

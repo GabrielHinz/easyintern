@@ -19,6 +19,7 @@ class Department(models.Model):
         limit_choices_to={"type": "teacher"},
         verbose_name="Responsável",
         help_text="Professor responsável pelo departamento.",
+        related_name="responsible_department",
         null=True,
         blank=True,
     )

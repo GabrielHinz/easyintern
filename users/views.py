@@ -1,5 +1,6 @@
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
+from panel.objects import get_users
 from users.forms import UserCustomForm
 from users.models import UserCustom
 
@@ -13,6 +14,9 @@ class UserListView(ListView):
         context = super().get_context_data(**kwargs)
         context["pagetitle"] = "Usuários"
         return context
+
+    def get_queryset(self):
+        return get_users(self.request.user).order_by("date_joined")
 
 
 class UserCreateView(CreateView):
@@ -41,7 +45,8 @@ class UserUpdateView(UpdateView):
     success_url = "/user/list/"
 
     def form_valid(self, form):
-        if "password" in form.cleaned_data:
+        if "password" in form.cleaned_data and form.cleaned_data["password"] != "":
+            print("alterado")
             form.instance.set_password(form.cleaned_data["password"])
         return super().form_valid(form)
 

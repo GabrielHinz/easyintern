@@ -1,0 +1,147 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<section class="section">
+    <div class="row">
+        <div class="col-lg-12">
+
+        <div class="card">
+            <div class="card-body">
+                <div class="row w-100">
+                    <div class="col-6">
+                        <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
+                        <p> {{ pagedescription }}<p>
+                    </div>
+                    <div class="col-6 mt-3">
+                        <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+                    </div>
+
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>
+                                Aluno
+                            </th>
+                            <th>Estágio</th>
+                            <th>Dia</th>
+                            <th>Horas Registradas</th>
+                            <th>Aprovado</th>
+                            <th data-sortable="false"  style="width: 250px">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for obj in reports %}
+                            <tr data-pk="{{obj.pk}}" class={% if obj.is_approved %}"tr-green"{% else %}"tr-yellow"{% endif %}>
+                                <td class="text-center"><a href="{% url 'panel_report_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
+                                <td>{{ obj.student }}</td>
+                                <td>{{ obj.internship }}</td>
+                                <td>{{ obj.date_report }}</td>
+                                <td>{{ obj.total_hours }}</td>
+                                <td>{{ obj.is_approved }}</td>
+                                <td syle="">
+                                    {% if request.user.type == "teacher" or request.user.type == "company" %}
+                                        {% if obj in signed_reports %}
+                                            <a href="#" class="btn btn-primary btn-sm disabled">Assinado</a>
+                                        {% else %}
+                                            <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureReport({{obj.pk}})" class="btn btn-primary btn-sm">Assinar</a>
+                                        {% endif %}
+                                    {% endif %}
+                                    <a href="{% url 'panel_report_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade" id="signatureModal" tabindex="-1" aria-labelledby="signatureModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="signatureModalLabel">Assinar Contrato</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="signatureForm">
+            <div class="mb-3">
+                <label for="signaturepassword" class="form-label">Digite sua senha para assinar o contrato:</label>
+                <input type="password" class="form-control" id="signaturepassword" required>
+            </div>
+            <input type="hidden" id="reportId">
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="confirmSignature">Confirmar</button>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    <script>
+        function confirmDelete(pk) {
+            if (confirm("Deseja realmente remover este relatório?")) {
+                fetch("/report/delete/" + pk + "/", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    const row = document.querySelector(`tr[data-pk="${pk}"]`);
+                    if (row) {
+                        row.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+    </script>
+    <script>
+        function onSendSignatureReport(pk) {
+            $('#reportId').val(pk);
+            $('#signatureModal').modal('show');
+        }
+        $('#confirmSignature').click(function() {
+            var pk = $('#reportId').val();
+            var password = $('#signaturepassword').val();
+
+            if (password) {
+                $.ajax({
+                    url: "/dx/report/signature/create/" + pk + "/",
+                    type: "POST",
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}',
+                        password: password
+                    },
+                    success: function(response) {
+                        const btn = $('#signature-btn-' + pk);
+                        if (btn) {
+                            btn.replaceWith('<a href="#" class="btn btn-primary btn-sm disabled">Assinado</a>');
+                        }
+                        $('#signatureModal').modal('hide');
+                        $('#signaturepassword').val("");
+                    },
+                    error: function(error) {
+                        showToast(error.responseJSON.message, "danger");
+                        $('#signatureModal').modal('hide');
+                        $('#signaturepassword').val("");
+                    }
+                });
+            } else {
+                alert('Por favor, digite sua senha.');
+            }
+        });
+    </script>
+{% endblock %}

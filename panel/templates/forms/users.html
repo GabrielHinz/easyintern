@@ -21,6 +21,9 @@
                     <div class="form-group mb-3 mt-3">
                         {{form.type|bootstrap}}
                     </div>
+                    <div class="form-group mt-3">
+                        {{form.is_active|bootstrap}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -47,6 +50,9 @@
                     </div>
                     <div data-type="student" class="form-group mt-3">
                         {{form.student_class|bootstrap}}
+                    </div>
+                    <div data-type="student" data-noreq="true" class="form-group mt-3">
+                        {{form.student_internship|bootstrap}}
                     </div>
                     <div data-type="student" class="form-group mt-3">
                         {{form.ra|bootstrap}}
@@ -96,12 +102,16 @@ $(document).ready(function() {
         $('[data-type]').each(function() {
             if ($(this).data('type') !== selectedType) {
                 $(this).hide();
-                $(this).find('input').removeAttr('required');
-                $(this).find('select').removeAttr('required');
+                if (!$(this).data('noreq')) {
+                    $(this).find('input').removeAttr('required');
+                    $(this).find('select').removeAttr('required');
+                }
             } else {
                 $(this).show();
-                $(this).find('select').attr('required', 'required');
-                $(this).find('input').attr('required', 'required');
+                if (!$(this).data('noreq')) {
+                    $(this).find('select').attr('required', 'required');
+                    $(this).find('input[type!="search"]').attr('required', 'required');
+                }
             }
         });
     }
