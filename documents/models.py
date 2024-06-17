@@ -81,6 +81,20 @@ class Report(models.Model):
         ).exists()
         return teacher_signature and company_signature
 
+    @property
+    def get_signatures(self):
+        callback = "<ul>"
+        if ReportSignature.objects.filter(report=self, user__type="teacher").exists():
+            callback += "<li>✔️ Professor(a)</li>"
+        else:
+            callback += "<li>❌ Professor(a)</li>"
+        if ReportSignature.objects.filter(report=self, user__type="company").exists():
+            callback += "<li>✔️ Empresa</li>"
+        else:
+            callback += "<li>❌ Empresa</li>"
+        callback += "</ul>"
+        return callback
+
     def __str__(self):
         return (
             f"{self.student.get_full_name()} {self.date_report}: {self.internship.name}"

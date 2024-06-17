@@ -62,6 +62,9 @@ class ContractUpdateView(UpdateView):
         context["pagetitle"] = "Contrato - " + self.object.internship.name
         return context
 
+    def get_queryset(self):
+        return get_contracts(self.request.user)
+
 
 class ContractDeleteView(DeleteView):
     model = Contract
@@ -150,6 +153,9 @@ class ReportUpdateView(UpdateView):
             return self.form_invalid(form)
 
         return super().form_valid(form)
+
+    def get_queryset(self):
+        return get_reports(self.request.user)
 
 
 class ReportDeleteView(DeleteView):

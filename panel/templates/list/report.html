@@ -10,7 +10,7 @@
                 <div class="row w-100">
                     <div class="col-6">
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
-                        <p> {{ pagedescription }}<p>
+                        <small> Relatórios serão considerados válidos apenas com aprovação de assinatura de um professor e da organização responsável pelo estágio</small>
                     </div>
                     <div class="col-6 mt-3">
                         <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
@@ -26,7 +26,7 @@
                             <th>Estágio</th>
                             <th>Dia</th>
                             <th>Horas Registradas</th>
-                            <th>Aprovado</th>
+                            <th>Assinaturas</th>
                             <th data-sortable="false"  style="width: 250px">Ações</th>
                         </tr>
                     </thead>
@@ -38,7 +38,7 @@
                                 <td>{{ obj.internship }}</td>
                                 <td>{{ obj.date_report }}</td>
                                 <td>{{ obj.total_hours }}</td>
-                                <td>{{ obj.is_approved }}</td>
+                                <td>{{ obj.get_signatures|safe }}</td>
                                 <td syle="">
                                     {% if request.user.type == "teacher" or request.user.type == "company" %}
                                         {% if obj in signed_reports %}
