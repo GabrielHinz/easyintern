@@ -12,10 +12,14 @@ class UserCustomForm(forms.ModelForm):
     )
     first_name = forms.CharField(label="Primeiro Nome", required=True)
     last_name = forms.CharField(label="Sobrenome", required=True)
+    is_staff = forms.BooleanField(
+        label="Administrador",
+        help_text="Usuário com acesso irrestrito.",
+        required=False,
+    )
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, user, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.fields["email"].required = True
 
         for field_name, field in self.fields.items():
@@ -35,7 +39,6 @@ class UserCustomForm(forms.ModelForm):
             "date_joined",
             "last_login",
             "is_superuser",
-            "is_staff",
             "groups",
             "user_permissions",
             "password",

@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load list_tags %}
 
 {% block content %}
 <section class="section">
@@ -12,9 +13,11 @@
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
                         <p> {{ pagedescription }}<p>
                     </div>
+                    {% if request.user|has_perm:"internship.add_internship" %}
                     <div class="col-6 mt-3">
                         <a href="{% url 'panel_internship_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
                     </div>
+                    {% endif %}
 
                 <table class="table datatable">
                     <thead>
@@ -40,8 +43,12 @@
                                 <td>{{ obj.date_end }}</td>
                                 <td>{{ obj.can_apply }}</td>
                                 <td syle="">
-                                    <a href="{% url 'panel_internship_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% if request.user|has_perm:"internship.change_internship" %}
+                                        <a href="{% url 'panel_internship_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    {% endif %}
+                                    {% if request.user|has_perm:"internship.delete_internship" %}
+                                        <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -55,6 +62,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% if request.user|has_perm:"internship.delete_internship" %}
     <script>
         function confirmDelete(pk) {
             if (confirm("Deseja realmente remover este estágio?")) {
@@ -78,4 +86,5 @@
             }
         }
     </script>
+    {% endif %}
 {% endblock %}

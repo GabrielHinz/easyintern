@@ -1,3 +1,4 @@
+{% load list_tags %}
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
@@ -11,49 +12,61 @@
 
         <li class="nav-heading">Universidade</li>
         
+        {% if request.user|has_perm:"users.view_usercustom" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_user_list' %}">
                 <i class="bi bi-person"></i>
-                <span>Usuários</span>
+                <span>Pessoas</span>
             </a>
         </li>
+        {% endif %}
 
+        {% if request.user|has_perm:"college.view_department" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_department_list' %}">
                 <i class="bi bi-folder"></i>
                 <span>Departamentos</span>
             </a>
         </li>
+        {% endif %}
 
+        {% if request.user|has_perm:"college.view_collegeclass" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_collegeclass_list' %}">
                 <i class="bi bi-people-fill"></i>
                 <span>Turmas</span>
             </a>
         </li>
+        {% endif %}
 
         <li class="nav-heading">Estágio</li>
 
+        {% if request.user|has_perm:"internship.view_internship" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_internship_list' %}">
                 <i class="bi bi-briefcase"></i>
                 <span>Estágios</span>
             </a>
         </li>
+        {% endif %}
 
+        {% if request.user|has_perm:"documents.view_contract" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_contract_list' %}">
                 <i class="bi bi-briefcase"></i>
                 <span>Contratos</span>
             </a>
         </li>
+        {% endif %}
 
+        {% if request.user|has_perm:"documents.view_report" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_report_list' %}">
                 <i class="bi bi-journal-text"></i>
                 <span>Relatórios</span>
             </a>
         </li>
+        {% endif %}
 
         <li class="nav-heading">Administração</li>
 

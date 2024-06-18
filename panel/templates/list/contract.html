@@ -1,5 +1,5 @@
 {% extends 'main/base.html' %}
-
+{% load list_tags %}
 {% block content %}
 <section class="section">
     <div class="row">
@@ -12,9 +12,11 @@
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
                         <p> {{ pagedescription }}<p>
                     </div>
+                    {% if request.user|has_perm:"documents.add_contract" %}
                     <div class="col-6 mt-3">
                         <a href="{% url 'panel_contract_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
                     </div>
+                    {% endif %}
 
                 <table class="table datatable">
                     <thead>
@@ -44,8 +46,10 @@
                                     {% if obj not in signed_contracts %}
                                         <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureContract({{obj.pk}})" class="btn btn-success btn-sm">Assinar</a>
                                     {% endif %}
-                                    {% if request.user.is_superuser or request.user.is_staff %}
+                                    {% if request.user|has_perm:"documents.change_contract" %}
                                         <a href="{% url 'panel_contract_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    {% endif %}
+                                    {% if request.user|has_perm:"documents.delete_contract" %}
                                         <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
                                     {% endif %}
                                 </td>
@@ -85,6 +89,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% if request.user|has_perm:"documents.delete_contract" %}
     <script>
         function confirmDelete(pk) {
             if (confirm("Deseja realmente remover este contrato?")) {
@@ -108,6 +113,7 @@
             }
         }
     </script>
+    {% endif %}
     <script>
         function onSendSignatureContract(pk) {
             $('#contractId').val(pk);

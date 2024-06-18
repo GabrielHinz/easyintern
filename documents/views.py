@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import JsonResponse
 from django.urls import reverse_lazy
 from django.views import View
@@ -8,10 +9,12 @@ from documents.models import Contract, ContractSignature, Report, ReportSignatur
 from panel.objects import get_contracts, get_reports
 
 
-class ContractListView(ListView):
+class ContractListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     model = Contract
     template_name = "list/contract.html"
     context_object_name = "contracts"
+    permission_required = "documents.view_contract"
+    login_url = "/login/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,11 +28,13 @@ class ContractListView(ListView):
         return get_contracts(self.request.user).order_by("pk")
 
 
-class ContractCreateView(CreateView):
+class ContractCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     model = Contract
     template_name = "forms/contract.html"
     form_class = ContractForm
     success_url = reverse_lazy("panel_contract_list")
+    permission_required = "documents.add_contract"
+    login_url = "/login/"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -44,11 +49,13 @@ class ContractCreateView(CreateView):
         return context
 
 
-class ContractUpdateView(UpdateView):
+class ContractUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Contract
     template_name = "forms/contract.html"
     form_class = ContractForm
     success_url = reverse_lazy("panel_contract_list")
+    permission_required = "documents.change_contract"
+    login_url = "/login/"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -66,16 +73,20 @@ class ContractUpdateView(UpdateView):
         return get_contracts(self.request.user)
 
 
-class ContractDeleteView(DeleteView):
+class ContractDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Contract
     template_name = "contract_delete.html"
     success_url = reverse_lazy("panel_contract_list")
+    permission_required = "documents.delete_contract"
+    login_url = "/login/"
 
 
-class ReportListView(ListView):
+class ReportListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
     model = Report
     template_name = "list/report.html"
     context_object_name = "reports"
+    permission_required = "documents.view_report"
+    login_url = "/login/"
 
     def get_queryset(self):
         return get_reports(self.request.user).order_by("pk")
@@ -89,11 +100,13 @@ class ReportListView(ListView):
         return context
 
 
-class ReportCreateView(CreateView):
+class ReportCreateView(PermissionRequiredMixin, LoginRequiredMixin, CreateView):
     model = Report
     template_name = "forms/report.html"
     form_class = ReportForm
     success_url = reverse_lazy("panel_report_list")
+    permission_required = "documents.add_report"
+    login_url = "/login/"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -109,24 +122,29 @@ class ReportCreateView(CreateView):
 
     def form_valid(self, form):
         internship = form.cleaned_data.get("internship")
-        contract = Contract.objects.filter(internship=internship).first()
-        user = self.request.user
 
-        if not ContractSignature.objects.filter(user=user, contract=contract).exists():
-            form.add_error(
-                "internship",
-                "Você precisa assinar o contrato com este estágio antes de enviar um relatório.",
-            )
-            return self.form_invalid(form)
+        if internship.have_contract:
+            contract = Contract.objects.filter(internship=internship).first()
+            user = self.request.user
+            if not ContractSignature.objects.filter(
+                user=user, contract=contract
+            ).exists():
+                form.add_error(
+                    "internship",
+                    "Você precisa assinar o contrato com este estágio antes de enviar um relatório.",
+                )
+                return self.form_invalid(form)
 
         return super().form_valid(form)
 
 
-class ReportUpdateView(UpdateView):
+class ReportUpdateView(PermissionRequiredMixin, LoginRequiredMixin, UpdateView):
     model = Report
     template_name = "forms/report.html"
     form_class = ReportForm
     success_url = reverse_lazy("panel_report_list")
+    permission_required = "documents.change_report"
+    login_url = "/login/"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -142,15 +160,18 @@ class ReportUpdateView(UpdateView):
 
     def form_valid(self, form):
         internship = form.cleaned_data.get("internship")
-        contract = Contract.objects.filter(internship=internship).first()
-        user = self.request.user
 
-        if not ContractSignature.objects.filter(user=user, contract=contract).exists():
-            form.add_error(
-                "internship",
-                "Você precisa assinar o contrato com este estágio antes de enviar um relatório.",
-            )
-            return self.form_invalid(form)
+        if internship.have_contract:
+            contract = Contract.objects.filter(internship=internship).first()
+            user = self.request.user
+            if not ContractSignature.objects.filter(
+                user=user, contract=contract
+            ).exists():
+                form.add_error(
+                    "internship",
+                    "Você precisa assinar o contrato com este estágio antes de enviar um relatório.",
+                )
+                return self.form_invalid(form)
 
         return super().form_valid(form)
 
@@ -158,19 +179,33 @@ class ReportUpdateView(UpdateView):
         return get_reports(self.request.user)
 
 
-class ReportDeleteView(DeleteView):
+class ReportDeleteView(PermissionRequiredMixin, LoginRequiredMixin, DeleteView):
     model = Report
     template_name = "report_delete.html"
     success_url = reverse_lazy("panel_report_list")
+    permission_required = "documents.delete_report"
+    login_url = "/login/"
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
+        reports = get_reports(request.user)
+        if self.object not in reports:
+            return JsonResponse(
+                {
+                    "success": False,
+                    "message": "Você não tem permissão para deletar este relatório.",
+                },
+                status=403,
+            )
         self.object.delete()
         return super().delete(request, *args, **kwargs)
 
 
 # Ajax Views
-class CreateSignatureContractView(View):
+class CreateSignatureContractView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    permission_required = "documents.add_contractsignature"
+    login_url = "/login/"
+
     def post(self, request, *args, **kwargs):
         contract_id = kwargs.get("pk")
         password = request.POST.get("password")
@@ -212,7 +247,10 @@ class CreateSignatureContractView(View):
             )
 
 
-class CreateSignatureReportView(View):
+class CreateSignatureReportView(PermissionRequiredMixin, LoginRequiredMixin, View):
+    permission_required = "documents.add_reportsignature"
+    login_url = "/login/"
+
     def post(self, request, *args, **kwargs):
         report_id = kwargs.get("pk")
         password = request.POST.get("password")

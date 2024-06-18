@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load list_tags %}
 
 {% block content %}
 <section class="section">
@@ -12,10 +13,11 @@
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
                         <small> Relatórios serão considerados válidos apenas com aprovação de assinatura de um professor e da organização responsável pelo estágio</small>
                     </div>
-                    <div class="col-6 mt-3">
-                        <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
-                    </div>
-
+                    {% if request.user|has_perm:"documents.add_report" %}
+                        <div class="col-6 mt-3">
+                            <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+                        </div>
+                    {% endif %}
                 <table class="table datatable">
                     <thead>
                         <tr>
@@ -47,8 +49,12 @@
                                             <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureReport({{obj.pk}})" class="btn btn-primary btn-sm">Assinar</a>
                                         {% endif %}
                                     {% endif %}
-                                    <a href="{% url 'panel_report_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% if request.user|has_perm:"documents.change_report" %}
+                                        <a href="{% url 'panel_report_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    {% endif %}
+                                    {% if request.user|has_perm:"documents.delete_report" %}
+                                        <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -85,6 +91,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% if request.user|has_perm:"documents.delete_report" %}
     <script>
         function confirmDelete(pk) {
             if (confirm("Deseja realmente remover este relatório?")) {
@@ -108,6 +115,7 @@
             }
         }
     </script>
+    {% endif %}
     <script>
         function onSendSignatureReport(pk) {
             $('#reportId').val(pk);

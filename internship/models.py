@@ -42,9 +42,9 @@ class Internship(models.Model):
     @property
     def can_apply(self):
         if self.have_contract:
-            contract = Contract.objects.filter(internship=self).last()
+            contract = Contract.objects.filter(internship=self).exists()
             if contract:
-                return contract.is_approved
+                return Contract.objects.filter(internship=self).first().is_approved
             return False
         return True
 

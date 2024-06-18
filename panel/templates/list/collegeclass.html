@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load list_tags %}
 
 {% block content %}
 <section class="section">
@@ -12,9 +13,11 @@
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
                         <p> {{ pagedescription }}<p>
                     </div>
-                    <div class="col-6 mt-3">
-                        <a href="{% url 'panel_collegeclass_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
-                    </div>
+                    {% if request.user|has_perm:"college.add_collegeclass" %}
+                        <div class="col-6 mt-3">
+                            <a href="{% url 'panel_collegeclass_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+                        </div>
+                    {% endif %}
 
                 <table class="table datatable">
                     <thead>
@@ -38,8 +41,12 @@
                                 <td>{{ obj.start_date|date:"d/m/Y" }}</td>
                                 <td>{{ obj.end_date|date:"d/m/Y" }}</td>
                                 <td syle="">
-                                    <a href="{% url 'panel_collegeclass_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% if request.user|has_perm:"college.change_collegeclass" %}
+                                        <a href="{% url 'panel_collegeclass_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    {% endif %}
+                                    {% if request.user|has_perm:"college.delete_collegeclass" %}
+                                        <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -53,27 +60,29 @@
 {% endblock %}
 
 {% block javascripts %}
-<script>
-    function confirmDelete(pk) {
-        if (confirm("Deseja realmente remover este departamento?")) {
-            fetch("/class/delete/" + pk + "/", {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({})
-            })
-            .then(response => {
-                const row = document.querySelector(`tr[data-pk="${pk}"]`);
-                if (row) {
-                    row.remove();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
+    {% if request.user|has_perm:"college.delete_collegeclass" %}
+    <script>
+        function confirmDelete(pk) {
+            if (confirm("Deseja realmente remover este departamento?")) {
+                fetch("/class/delete/" + pk + "/", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({})
+                })
+                .then(response => {
+                    const row = document.querySelector(`tr[data-pk="${pk}"]`);
+                    if (row) {
+                        row.remove();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
         }
-    }
-</script>
+    </script>
+    {% endif %}
 {% endblock %}

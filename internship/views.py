@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 
@@ -6,10 +7,12 @@ from internship.models import Internship
 from panel.objects import get_internships
 
 
-class InternshipListView(ListView):
+class InternshipListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
     model = Internship
     template_name = "list/internship.html"
     context_object_name = "internships"
+    login_url = "/login/"
+    permission_required = "internship.view_internship"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -20,11 +23,13 @@ class InternshipListView(ListView):
         return get_internships(self.request.user).order_by("pk")
 
 
-class InternshipCreateView(CreateView):
+class InternshipCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Internship
     template_name = "forms/internship.html"
     form_class = InternshipForm
     success_url = reverse_lazy("panel_internship_list")
+    login_url = "/login/"
+    permission_required = "internship.add_internship"
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -39,11 +44,13 @@ class InternshipCreateView(CreateView):
         return context
 
 
-class InternshipUpdateView(UpdateView):
+class InternshipUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Internship
     template_name = "forms/internship.html"
     form_class = InternshipForm
     success_url = reverse_lazy("panel_internship_list")
+    login_url = "/login/"
+    permission_required = "internship.change_internship"
 
     def get_queryset(self):
         return get_internships(self.request.user)
@@ -61,10 +68,12 @@ class InternshipUpdateView(UpdateView):
         return context
 
 
-class InternshipDeleteView(DeleteView):
+class InternshipDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Internship
     template_name = "internship_delete.html"
     success_url = reverse_lazy("panel_internship_list")
+    login_url = "/login/"
+    permission_required = "internship.delete_internship"
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

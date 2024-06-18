@@ -1,4 +1,5 @@
 {% extends 'main/base.html' %}
+{% load list_tags %}
 
 {% block content %}
 <section class="section">
@@ -12,9 +13,11 @@
                         <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
                         <p> {{ pagedescription }}<p>
                     </div>
-                    <div class="col-6 mt-3">
-                        <a href="{% url 'panel_department_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
-                    </div>
+                    {% if request.user|has_perm:"college.add_department" %}
+                        <div class="col-6 mt-3">
+                            <a href="{% url 'panel_department_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+                        </div>
+                    {% endif %}
 
                 <table class="table datatable">
                     <thead>
@@ -36,8 +39,12 @@
                                 <td>{{ obj.responsible }}</td>
                                 <td>{{ obj.code }}</td>
                                 <td syle="">
-                                    <a href="{% url 'panel_department_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% if request.user|has_perm:"college.change_department" %}
+                                        <a href="{% url 'panel_department_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                    {% endif %}
+                                    {% if request.user|has_perm:"college.delete_department" %}
+                                        <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
+                                    {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -51,6 +58,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {% if request.user|has_perm:"college.delete_department" %}
     <script>
         function confirmDelete(pk) {
             if (confirm("Deseja realmente remover este departamento?")) {
@@ -74,4 +82,5 @@
             }
         }
     </script>
+    {% endif %}
 {% endblock %}

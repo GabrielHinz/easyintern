@@ -21,6 +21,11 @@
                     <div class="form-group mb-3 mt-3">
                         {{form.type|bootstrap}}
                     </div>
+                    {% if user.is_superuser %}
+                    <div class="form-group mt-3">
+                        {{form.is_staff|bootstrap}}
+                    </div>
+                    {% endif %}
                     <div class="form-group mt-3">
                         {{form.is_active|bootstrap}}
                     </div>
