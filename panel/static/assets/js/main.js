@@ -360,3 +360,38 @@ function showToast(message, type = 'primary') {
     $(this).remove();
   });
 }
+
+function getUserData(pk) {
+  $.ajax({
+    url: `/dx/user/view/${pk}/`,
+    method: 'GET',
+    success: function (response) {
+      var modalHTML = `
+        <div class="modal fade" id="userDataModal" tabindex="-1" aria-labelledby="userDataModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="userDataModalLabel">Detalhes da Pessoa</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                ${response}
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      $('#userDataModal').remove();
+      $('body').append(modalHTML);
+
+      $('#userDataModal').modal('show');
+    },
+    error: function (error) {
+      showToast('Houve um problema ao acessar os dados', 'danger');
+    }
+  });
+}

@@ -39,6 +39,7 @@
                                 <td>{{ user.email }}</td>
                                 <td>{{ user.contact }}</td>
                                 <td syle="">
+                                    <a href="#" onclick="getUserData({{user.pk}})" class="btn btn-primary btn-sm">Visualizar</a>
                                     {% if request.user|has_perm:"users.change_usercustom"  %}
                                         <a href="{% url 'panel_user_update' pk=user.pk %}" class="btn btn-primary btn-sm">Editar</a>
                                     {% endif %}

@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.models import Group
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from panel.objects import get_users
 from users.forms import UserCustomForm
@@ -103,3 +104,50 @@ class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return get_users(self.request.user)
+
+
+# Ajax Views
+class DXUserView(LoginRequiredMixin, PermissionRequiredMixin, View):
+    permission_required = "users.view_usercustom"
+    login_url = "/login/"
+
+    def get(self, request, *args, **kwargs):
+        user_id = kwargs.get("pk")
+        user = get_users(request.user).filter(id=user_id).first()
+        if user:
+            image = (
+                user.image.url if user.image else "/static/assets/img/default-user.jpg"
+            )
+            card_body = f"""
+                <div class="card-body ">
+                    <div class="text-center">
+                        <img src="{image}" style="width:150px" alt="Profile" class="rounded-circle">
+                        <h3 class="card-title">{user.get_full_name()}
+                        <br><span class="card-text text-muted">{user.get_type_display()}</span>
+                    </h3>
+                    </div>
+
+                    <hr><h5 class="card-text text-muted"><b>Dados</b></h5><hr>
+                    <p class="card-text text-muted">E-mail: {user.email}</p>
+                    <p class="card-text text-muted">Contatos: {user.contact} / {user.extra_contact or "N/A"}</p>
+            """
+            if user.type == "student":
+                card_body += f"""
+                    <p class="card-text text-muted">Turma: {user.student_class}</p>
+                    <p class="card-text text-muted">RA: {user.ra}</p>
+                    <hr><h5 class="card-text text-muted"><b>Estágios</b></h5><hr>
+                """
+                for internship in user.student_internship.all():
+                    card_body += f"""
+                        <p class="card-text text-muted">Estágio: {internship.name}</p>
+                    """
+            elif user.type == "company":
+                card_body += f"""
+                    <p class="card-text text-muted">Endereço: {user.address}</p>
+                    <p class="card-text text-muted">CNPJ: {user.company_cnpj}</p>
+                    <p class="card-text text-muted">Setor: {user.company_sector}</p>
+                """
+            card_body += "</div>"
+            return HttpResponse(card_body)
+        else:
+            return JsonResponse({"error": "User not found"}, status=404)

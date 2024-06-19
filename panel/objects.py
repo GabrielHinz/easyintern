@@ -23,7 +23,10 @@ def get_users(user) -> UserCustom:
     # Professor: Apenas os alunos da turma que ele leciona e se ele for responsável por algum departamento,
     # as classes desse departamento também
     # Aluno: Apenas ele mesmo, os professores dele e as empresas dos estágios dele
-    # Empresa: Apenas ela mesma, os alunos dos estágios dela e os professores dos alunos dos estágios dela
+    # Empresa: Apenas ela mesma, os alunos dos estágios dela
+
+    # TODO: Falta implementar os professores para a empresa
+
     full_obj = UserCustom.objects.all()
 
     if user.is_superuser or user.is_staff or user.type == "admin":
