@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% load bootstrap %}
 {% block content %}
-<form method="POST">
+<form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row">
         <div class="col-12 col-lg-3">
@@ -62,7 +62,11 @@
                     <div data-type="student" class="form-group mt-3">
                         {{form.ra|bootstrap}}
                     </div>
-                    <hr>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Contato</h5>
                     <div class="form-group mt-3">
                         {{form.email|bootstrap}}
                     </div>

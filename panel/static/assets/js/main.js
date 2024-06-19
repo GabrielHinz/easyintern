@@ -298,7 +298,13 @@
         cellClass: "green",
         headerClass: "red"
       }
-      ]
+      ],
+      labels: {
+        placeholder: "Pesquisar...",
+        perPage: "resultados por página",
+        noRows: "Nenhum registro encontrado",
+        info: "Mostrando {start} até {end} de {rows} registros"
+      }
     });
   })
 

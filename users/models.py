@@ -90,6 +90,10 @@ class UserCustom(AbstractUser):
         else:
             return "Usuário"
 
+    @property
+    def is_staff_teacher(self):
+        return self.type == "teacher" and self.responsible_department.exists()
+
     def __str__(self):
         if self.type == "student":
             return self.first_name + " " + self.last_name + " - (" + self.ra + ")"

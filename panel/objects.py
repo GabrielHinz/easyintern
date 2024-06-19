@@ -95,3 +95,14 @@ def get_reports(user):
     if user.type == "company":
         return full_obj.filter(internship__company=user)
     return full_obj
+
+
+def get_reports_approved():
+    reports = Report.objects.all()
+    ids = []
+
+    for report in reports:
+        if report.is_approved:
+            ids.append(report.id)
+
+    return reports.filter(id__in=ids)

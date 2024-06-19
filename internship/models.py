@@ -23,6 +23,7 @@ class Internship(models.Model):
         UserCustom,
         on_delete=models.CASCADE,
         limit_choices_to={"type": "company"},
+        related_name="internships",
         verbose_name="Empresa",
         help_text="Empresa que está oferecendo o estágio.",
     )

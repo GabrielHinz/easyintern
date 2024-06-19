@@ -1254,3 +1254,24 @@ span.help-block {
 .tr-yellow td {
   background-color: #ffd1000f !important;
 }
+
+.profile-user-side {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+.datatable-table th {
+  font-size: 16px;
+  font-weight: 500;
+  color: #8A92A6;
+  font-family: "Poppins", sans-serif;
+}
+
+.table thead tr th {
+  padding: .75rem 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: .2px;
+  border-bottom: 2px solid transparent !important;
+  background-color: #F5F6FA;
+}

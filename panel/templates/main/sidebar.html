@@ -2,6 +2,39 @@
 <aside id="sidebar" class="sidebar">
 
     <ul class="sidebar-nav" id="sidebar-nav">
+        <div class="user-profile text-center">
+            <div class="">
+                <div class="profile-info mb-3">
+                    <img style="width: 120px;" src="
+                    {% if request.user.image %}
+                        {{ request.user.image.url }}
+                    {% else %}
+                        /static/assets/img/default-user.jpg
+                    {% endif %}" alt="user" class="img-fluid profile-pic nav-profile rounded-circle profile-user-side ">
+                </div>
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#profile-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-circle-fill" style="color: green;font-size: 12px;"></i><span>{{request.user.get_full_name}}</span><i
+                            class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="profile-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a href="#">
+                                <i class="bi bi-circle"></i><span>Meu Perfil</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#">
+                                <i class="bi bi-circle"></i><span>Deslogar</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <hr style="opacity: 0.15">
+            </div>
+        </div>
+
+        <li class="nav-heading">Home</li>
 
         <li class="nav-item">
             <a class="nav-link " href="{% url 'panel' %}">
@@ -10,31 +43,36 @@
             </a>
         </li>
 
-        <li class="nav-heading">Universidade</li>
-        
+        {% if request.user|has_perm:"college.view_department" and request.user|has_perm:"college.view_collegeclass" %}
+            <li class="nav-item">
+                <a class="nav-link collapsed" data-bs-target="#university-nav" data-bs-toggle="collapse" href="#">
+                    <i class="bi bi-menu-button-wide"></i><span>Universidade</span><i
+                        class="bi bi-chevron-down ms-auto"></i>
+                </a>
+                <ul id="university-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                    {% if request.user|has_perm:"college.view_department" %}
+                    <li>
+                        <a href="{% url 'panel_department_list' %}">
+                            <i class="bi bi-circle"></i><span>Departamentos</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if request.user|has_perm:"college.view_collegeclass" %}
+                    <li>
+                        <a href="{% url 'panel_collegeclass_list' %}">
+                            <i class="bi bi-circle"></i><span>Turmas/Classes</span>
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </li>
+        {% endif %}
+
         {% if request.user|has_perm:"users.view_usercustom" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_user_list' %}">
                 <i class="bi bi-person"></i>
                 <span>Pessoas</span>
-            </a>
-        </li>
-        {% endif %}
-
-        {% if request.user|has_perm:"college.view_department" %}
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{% url 'panel_department_list' %}">
-                <i class="bi bi-folder"></i>
-                <span>Departamentos</span>
-            </a>
-        </li>
-        {% endif %}
-
-        {% if request.user|has_perm:"college.view_collegeclass" %}
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="{% url 'panel_collegeclass_list' %}">
-                <i class="bi bi-people-fill"></i>
-                <span>Turmas</span>
             </a>
         </li>
         {% endif %}
