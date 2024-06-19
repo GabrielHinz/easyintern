@@ -4,63 +4,81 @@
 {% block content %}
 <section class="section">
     <div class="row">
-        <div class="col-lg-12">
-
-        <div class="card">
-            <div class="card-body">
-                <div class="row w-100">
-                    <div class="col-6">
-                        <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
-                        <small> Relatórios serão considerados válidos apenas com aprovação de assinatura de um professor e da organização responsável pelo estágio</small>
-                    </div>
-                    {% if request.user|has_perm:"documents.add_report" %}
-                        <div class="col-6 mt-3">
-                            <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
-                        </div>
-                    {% endif %}
-                <table class="table datatable">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>
-                                Aluno
-                            </th>
-                            <th>Estágio</th>
-                            <th>Dia</th>
-                            <th>Horas</th>
-                            <th>Assinaturas</th>
-                            <th>Situação</th>
-                            <th data-sortable="false"  style="width: 250px">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for obj in reports %}
-                            <tr data-pk="{{obj.pk}}" class={% if obj.is_approved %}"tr-green"{% else %}"tr-yellow"{% endif %}>
-                                <td class="text-center"><a href="{% url 'panel_report_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
-                                <td>{{ obj.student }}</td>
-                                <td>{{ obj.internship }}</td>
-                                <td>{{ obj.date_report }}</td>
-                                <td>{{ obj.total_hours }}</td>
-                                <td>{{ obj.get_signatures|safe }}</td>
-                                <td>{% if obj.is_approved %}Aprovado{% else %}Pendente{% endif %}</td>
-                                <td syle="">
-                                    {% if request.user.type == "teacher" or request.user.type == "company" %}
-                                        {% if obj not in signed_reports %}
-                                            <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureReport({{obj.pk}})" class="btn btn-primary btn-sm">Assinar</a>
-                                        {% endif %}
-                                    {% endif %}
-                                    {% if request.user|has_perm:"documents.change_report" %}
-                                        <a href="{% url 'panel_report_update' pk=obj.pk %}" class="btn btn-primary btn-sm">Editar</a>
-                                    {% endif %}
-                                    {% if request.user|has_perm:"documents.delete_report" %}
-                                        <a href="#" onclick="confirmDelete({{obj.pk}})" class="btn btn-danger btn-sm">Excluir</a>
-                                    {% endif %}
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+        <div class="float-right">
+            {% if request.user|has_perm:"documents.add_report" %}
+                <a href="{% url 'panel_report_create' %}" class="btn btn-primary float-end">Adicionar Novo</a>
+            {% endif %}
         </div>
+
+        <div class="card"></div>
+        
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row w-100">
+                        <div class="col-12">
+                            <h5 class="card-title">Listagem de {{ pagetitle }}</h5>
+                            <small> Relatórios serão considerados válidos apenas com aprovação de assinatura de um professor e da organização responsável pelo estágio</small>
+                        </div>
+                    </div>
+                    <table class="table datatable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>
+                                    Aluno
+                                </th>
+                                <th>Estágio</th>
+                                <th>Dia</th>
+                                <th>Horas</th>
+                                <th>Assinaturas</th>
+                                <th>Situação</th>
+                                <th data-sortable="false"  style="width: 250px">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for obj in reports %}
+                                <tr data-pk="{{obj.pk}}">
+                                    <td class="text-center"><a href="{% url 'panel_report_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
+                                    <td>{{ obj.student }}</td>
+                                    <td>{{ obj.internship }}</td>
+                                    <td>{{ obj.date_report }}</td>
+                                    <td>{{ obj.total_hours }}</td>
+                                    <td>{{ obj.get_signatures|safe }}</td>
+                                    <td>
+                                        {% if request.user.type == "teacher" or request.user.type == "company" %}
+                                            {% if obj not in signed_reports %}
+                                                <a href="#" id="signature-btn-{{obj.pk}}" onclick="onSendSignatureReport({{obj.pk}})" class="btn btn-primary btn-sm">
+                                                    <i class="bi bi-pen" style="font-size: 11px;"></i> Assinar
+                                                </a>
+                                            {% endif %}
+                                        {% endif %}
+                                        {% if obj.is_approved %}
+                                            <span class="badge bg-success">Aprovado</span>
+                                        {% else %}
+                                            {% if obj in signed_reports %}
+                                                <span class="badge bg-warning text-dark">Pendente</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </td>
+                                    <td syle="">
+                                        
+                                        {% if request.user|has_perm:"documents.change_report" %}
+                                            <a href="{% url 'panel_report_update' pk=obj.pk %}" class="me-2">
+                                                <i class="bi bi-pencil-square" style="font-size: 17px;"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if request.user|has_perm:"documents.delete_report" %}
+                                            <a href="#" onclick="confirmDelete({{obj.pk}})" class="me-2">
+                                                <i class="bi bi-trash" style="font-size: 17px;"></i>
+                                            </a>
+                                        {% endif %}
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -69,13 +87,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="signatureModalLabel">Assinar Contrato</h5>
+            <h5 class="modal-title" id="signatureModalLabel">Assinar Relatório</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
             <form id="signatureForm">
+                <p>Antes de assinar o contrato, garanta que os dados estão corretos de acordo com o relatório.</p>
             <div class="mb-3">
-                <label for="signaturepassword" class="form-label">Digite sua senha para assinar o contrato:</label>
+                <label for="signaturepassword" class="form-label">Digite sua senha para assinar:</label>
                 <input type="password" class="form-control" id="signaturepassword" required>
             </div>
             <input type="hidden" id="reportId">

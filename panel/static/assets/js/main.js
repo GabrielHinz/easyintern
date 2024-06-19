@@ -401,3 +401,33 @@ function getUserData(pk) {
     }
   });
 }
+
+/**
+ * Sidebar active link
+ */
+$(document).ready(function () {
+  var current = window.location.pathname;
+  var regex = /\/edit\/\d+\//;
+  if (regex.test(current)) {
+    current = current.replace(regex, '/list/');
+  } else if (current.endsWith('/create/')) {
+    current = current.replace('/create/', '/list/');
+  }
+  $('aside a').each(function () {
+    var $this = $(this);
+    if ($this.attr('href') === current) {
+      if (!$this.hasClass('collapsed')) {
+        $this.addClass('active');
+        var navLink = $this.closest('li.nav-item').find('a.nav-link');
+        var targetId = navLink.attr('data-bs-target');
+        navLink.removeClass('collapsed');
+        if (targetId) {
+          targetId = targetId.replace('#', '');
+          $('#' + targetId).addClass('show');
+        }
+      } else {
+        $this.removeClass('collapsed');
+      }
+    }
+  });
+});

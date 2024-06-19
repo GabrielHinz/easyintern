@@ -1275,3 +1275,7 @@ span.help-block {
   border-bottom: 2px solid transparent !important;
   background-color: #F5F6FA;
 }
+
+.table td {
+  font-size: 15px;
+}

@@ -15,6 +15,7 @@ class DepartmentListView(PermissionRequiredMixin, LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["segment"] = "Universidade"
         context["pagetitle"] = "Departamentos"
         return context
 
@@ -68,6 +69,7 @@ class CollegeClassListView(PermissionRequiredMixin, LoginRequiredMixin, ListView
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["segment"] = "Universidade"
         context["pagetitle"] = "Turmas"
         return context
 

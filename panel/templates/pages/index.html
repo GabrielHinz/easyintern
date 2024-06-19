@@ -139,8 +139,6 @@
                                     const counts = {{ charts.reports_chart.counts|safe }};
                                     const labels_aproved = {{ charts.reports_chart.labels_approved|safe }};
                                     const counts_aproved = {{ charts.reports_chart.counts_approved|safe }};
-
-                                    console.log(labels, counts);
                                     
                                     new ApexCharts(document.querySelector("#reportsChart"), {
                                         series: [

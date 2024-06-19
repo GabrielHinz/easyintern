@@ -37,20 +37,19 @@ class Contract(models.Model):
 
     @property
     def get_signatures(self):
-        callback = "<ul>"
+        callback = ""
         if ContractSignature.objects.filter(
             contract=self, user__type="teacher"
         ).exists():
-            callback += "<li>✔️ Professor(a)</li>"
+            callback += "<span><i style='font-size: 16px; color: green;'class='bi bi-check-all'></i> Professor</span><br>"
         else:
-            callback += "<li>❌ Professor(a)</li>"
+            callback += "<span><i style='font-size: 16px; color: red;' class='bi bi-x'></i> Professor</span><br>"
         if ContractSignature.objects.filter(
             contract=self, user__type="company"
         ).exists():
-            callback += "<li>✔️ Empresa</li>"
+            callback += "<span><i style='font-size: 16px; color: green;' class='bi bi-check-all'></i> Empresa</span><br>"
         else:
-            callback += "<li>❌ Empresa</li>"
-        callback += "</ul>"
+            callback += "<span><i style='font-size: 16px; color: red;' class='bi bi-x'></i> Empresa</span>"
         return callback
 
     def __str__(self):
@@ -113,16 +112,15 @@ class Report(models.Model):
 
     @property
     def get_signatures(self):
-        callback = "<ul>"
+        callback = ""
         if ReportSignature.objects.filter(report=self, user__type="teacher").exists():
-            callback += "<li>✔️ Professor(a)</li>"
+            callback += "<span><i style='font-size: 16px; color: green;'class='bi bi-check-all'></i> Professor</span><br>"
         else:
-            callback += "<li>❌ Professor(a)</li>"
+            callback += "<span><i style='font-size: 16px; color: red;' class='bi bi-x'></i> Professor</span><br>"
         if ReportSignature.objects.filter(report=self, user__type="company").exists():
-            callback += "<li>✔️ Empresa</li>"
+            callback += "<span><i style='font-size: 16px; color: green;' class='bi bi-check-all'></i> Empresa</span><br>"
         else:
-            callback += "<li>❌ Empresa</li>"
-        callback += "</ul>"
+            callback += "<span><i style='font-size: 16px; color: red;' class='bi bi-x'></i> Empresa</span>"
         return callback
 
     def __str__(self):
