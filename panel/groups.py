@@ -1,4 +1,5 @@
 from django.contrib.auth.models import Group, Permission
+from django.db import connection
 
 
 def create_groups_and_permissions():
@@ -48,15 +49,24 @@ def create_groups_and_permissions():
         ],
     }
 
-    for group_name, perm_codenames in group_permissions.items():
-        group, _ = Group.objects.get_or_create(name=group_name)
-        existing_permissions = set(group.permissions.values_list("codename", flat=True))
-        new_permissions = set(perm_codenames)
+    table_exists = "easyintern.auth_group" in connection.introspection.table_names()
 
-        if existing_permissions != new_permissions:
-            group.permissions.clear()
-            for perm_codename in perm_codenames:
-                permission = Permission.objects.filter(codename=perm_codename).first()
-                if permission:
-                    group.permissions.add(permission)
-            group.save()
+    if table_exists:
+        for group_name, perm_codenames in group_permissions.items():
+            group, _ = Group.objects.get_or_create(name=group_name)
+            existing_permissions = set(
+                group.permissions.values_list("codename", flat=True)
+            )
+            new_permissions = set(perm_codenames)
+
+            if existing_permissions != new_permissions:
+                group.permissions.clear()
+                for perm_codename in perm_codenames:
+                    permission = Permission.objects.filter(
+                        codename=perm_codename
+                    ).first()
+                    if permission:
+                        group.permissions.add(permission)
+                group.save()
+    else:
+        print("The required table 'django_content_type' does not exist.")

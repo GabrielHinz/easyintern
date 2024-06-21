@@ -82,7 +82,7 @@
         {% if request.user|has_perm:"internship.view_internship" %}
         <li class="nav-item">
             <a class="nav-link collapsed" href="{% url 'panel_internship_list' %}">
-                <i class="bi bi-briefcase"></i>
+                <i class="bi bi-person-workspace"></i>
                 <span>Estágios</span>
             </a>
         </li>
@@ -110,18 +110,13 @@
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Components</span><i
+                <i class="bi bi-menu-button-wide"></i><span>Importação</span><i
                     class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="components-alerts.html">
-                        <i class="bi bi-circle"></i><span>Alerts</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="components-accordion.html">
-                        <i class="bi bi-circle"></i><span>Accordion</span>
+                    <a href="#">
+                        <i class="bi bi-circle"></i><span>Gerenciamento API</span>
                     </a>
                 </li>
             </ul>
@@ -130,7 +125,7 @@
         <hr style="opacity: 0.15">
 
         <li class="nav-item">
-            <a class="nav-link collapsed" href="#">
+            <a class="nav-link collapsed" href="{% url 'panel_logout' %}">
                 <i class="bi bi-box-arrow-right"></i>
                 <span>Encerrar Sessão</span>
             </a>
