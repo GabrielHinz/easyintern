@@ -3,9 +3,9 @@ version: '3'
 services:
   easyintern:
     build: .
-    command: /entrypoint.sh
+    command: ./entrypoint.sh
     env_file:
       - ".env"
     ports:
-      - 8000:8000
+      - 8000:80
     restart: always
