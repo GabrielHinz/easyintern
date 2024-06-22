@@ -2,11 +2,13 @@
     <div class="copyright">
         &copy;  <strong><span>{{APP_NAME}} - {{APP_VERSION}}</span></strong>. Todos os direitos reservados.
     </div>
+    {% if not DEBUG_MODE %}
     <div class="credits">
         <small>
         Criado por <a href="https://github.com/GabrielHinz">Gabriel Hinz</a>.
         Design por <a href="https://bootstrapmade.com/">BootstrapMade</a>
         </small>
     </div>
+    {% endif %}
 
 </footer>
