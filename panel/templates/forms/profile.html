@@ -1,0 +1,59 @@
+{% extends 'main/base.html' %}
+{% load bootstrap %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+        <div class="col-12 col-lg-9 mx-auto">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Perfil</h5>
+                    {% if form.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>Erro!</strong> Por favor, corrija os itens.
+                        </div>
+                    {% endif %}
+                    <div class="form-group mt-3">
+                        {{form.first_name|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.last_name|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.email|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.address|bootstrap}}
+                    </div>
+                    <div class="form-group mt-3">
+                        {{form.contact|bootstrap}}
+                    </div>
+                    <div data-type="student" class="form-group mt-3">
+                        {{form.extra_contact|bootstrap}}
+                    </div>
+                    <div class="row mt-3 ">
+                        <div class="col-6">
+                            <a href="{{segment_link}}" class="btn btn-secondary w-100">Cancelar</a>
+                        </div>
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% for field in form %}
+    {% if field.errors %}
+    <script>
+        document.getElementById('{{ field.id_for_label }}').classList.add('is-invalid');
+    </script>
+    {% endif %}
+{% endfor %}
+
+{% endblock %}
+
+{% block javascripts %}
+{% endblock %}

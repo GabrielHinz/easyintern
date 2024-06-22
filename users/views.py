@@ -4,7 +4,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView, View
 
 from panel.objects import get_users
-from users.forms import UserCustomForm
+from users.forms import UserCustomForm, UserProfileForm
 from users.models import UserCustom
 
 
@@ -104,6 +104,29 @@ class UserDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
 
     def get_queryset(self):
         return get_users(self.request.user)
+
+
+class UserProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = UserCustom
+    template_name = "forms/profile.html"
+    form_class = UserProfileForm
+    success_url = "/user/list/"
+    login_url = "/login/"
+
+    def form_valid(self, form):
+        if "password" in form.cleaned_data and form.cleaned_data["password"] != "":
+            form.instance.set_password(form.cleaned_data["password"])
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["segment"] = "Usuários"
+        context["segment_link"] = "/user/list/"
+        context["pagetitle"] = "Atualização de Perfil"
+        return context
+
+    def get_object(self, queryset=None):
+        return self.request.user
 
 
 # Ajax Views

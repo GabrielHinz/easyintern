@@ -5,6 +5,7 @@ from users.views import (
     UserCreateView,
     UserDeleteView,
     UserListView,
+    UserProfileUpdateView,
     UserUpdateView,
 )
 
@@ -13,5 +14,6 @@ urlpatterns = [
     path("user/create/", UserCreateView.as_view(), name="panel_user_create"),
     path("user/update/<int:pk>/", UserUpdateView.as_view(), name="panel_user_update"),
     path("user/delete/<int:pk>/", UserDeleteView.as_view(), name="panel_user_delete"),
+    path("user/profile/", UserProfileUpdateView.as_view(), name="panel_user_profile"),
     path("dx/user/view/<int:pk>/", DXUserView.as_view(), name="panel_user_view_dx"),
 ]
