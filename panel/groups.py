@@ -68,5 +68,3 @@ def create_groups_and_permissions():
                     if permission:
                         group.permissions.add(permission)
                 group.save()
-    else:
-        print("The required table 'django_content_type' does not exist.")

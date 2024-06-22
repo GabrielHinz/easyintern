@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 
+from decouple import config
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -20,17 +22,26 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w2jcpodhlhjs*&(u=%&e7rarnwt!d9^pb!qubxf8#yq5#y7wu("
+SECRET_KEY = config(
+    "SECRET_KEY",
+    default="django-insecure-w2jcpodhlhjs*&(u=%&e7rarnwt!d9^pb!qubxf8#yq5#y7wu(",
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", default=True, cast=bool)
 
-ALLOWED_HOSTS = ["*"]
+# Allowed hosts
+ALLOWED_HOSTS, CSRF_TRUSTED_ORIGINS = [], []
+
+for host in config("ALLOWED_HOSTS", default=["localhost"]).split():
+    CSRF_TRUSTED_ORIGINS.append("http://" + host)
+    CSRF_TRUSTED_ORIGINS.append("https://" + host)
+    ALLOWED_HOSTS.append(host)
 
 
 # Application definition
 APP_NAME = "EasyIntern"
-APP_VERSION = "0.1"
+APP_VERSION = "Beta 0.1"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
