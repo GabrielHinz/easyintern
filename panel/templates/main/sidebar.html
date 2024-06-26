@@ -101,21 +101,26 @@
         </li>
         {% endif %}
 
+        {% if request.user.is_superuser %}
         <li class="nav-heading">Administração</li>
 
         <li class="nav-item">
             <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
-                <i class="bi bi-menu-button-wide"></i><span>Importação</span><i
+                <i class="bi bi-menu-button-wide"></i><span>Integrações API</span><i
                     class="bi bi-chevron-down ms-auto"></i>
             </a>
             <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
                 <li>
-                    <a href="#">
-                        <i class="bi bi-circle"></i><span>Gerenciamento API</span>
+                    <a href="{% url 'schema-swagger-ui' %}">
+                        <i class="bi bi-circle"></i>Swagger<span></span>
+                    </a>
+                    <a href="{% url 'schema-redoc' %}">
+                        <i class="bi bi-circle"></i>Redoc<span></span>
                     </a>
                 </li>
             </ul>
         </li>
+        {%endif %}
 
         <hr style="opacity: 0.15">
 

@@ -41,7 +41,7 @@
                                 <tr data-pk="{{obj.pk}}">
                                     <td class="text-center"><a href="{% url 'panel_internship_update' pk=obj.pk %}">{{ obj.pk }}</a></td>
                                     <td>{{ obj.name }}</td>
-                                    <td>{{ obj.company.first_name }}</td>
+                                    <td>{{ obj.company.get_full_name }}</td>
                                     <td>{{ obj.date_start }}</td>
                                     <td>{{ obj.date_end }}</td>
                                     <td>
