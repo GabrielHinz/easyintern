@@ -49,7 +49,7 @@ def create_groups_and_permissions():
         ],
     }
 
-    table_exists = "easyintern.auth_group" in connection.introspection.table_names()
+    table_exists = "auth_group" in connection.introspection.table_names()
 
     if table_exists:
         for group_name, perm_codenames in group_permissions.items():
